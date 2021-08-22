@@ -1,12 +1,12 @@
 (ns reagent.impl.component
   (:require [goog.object :as gobj]
-            [reagent.impl.util :as util]
+            [reagent.debug :refer-macros [dev? warn error warn-unless assert-callable]]
             [reagent.impl.batching :as batch]
             [reagent.impl.protocols :as p]
+            [reagent.impl.util :as util]
             [reagent.ratom :as ratom]
-            [reagent.debug :refer-macros [dev? warn error warn-unless assert-callable]]))
+            [reagent.react :refer [react]]))
 
-(def react (.-react goog/global))
 (declare ^:dynamic *current-component*)
 
 ;;; Argv access

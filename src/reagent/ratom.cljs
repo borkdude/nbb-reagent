@@ -1,11 +1,11 @@
 (ns reagent.ratom
   (:refer-clojure :exclude [atom])
   (:require-macros [reagent.ratom])
-  (:require [reagent.impl.util :as util]
+  (:require [clojure.set :as s]
+            [goog.object :as obj]
             [reagent.debug :refer-macros [warn dev?]]
             [reagent.impl.batching :as batch]
-            [clojure.set :as s]
-            [goog.object :as obj]))
+            [reagent.impl.util :as util]))
 
 (declare flush!)
 

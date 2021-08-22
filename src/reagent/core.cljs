@@ -1,17 +1,16 @@
 (ns reagent.core
   (:require-macros [reagent.core])
   (:refer-clojure :exclude [partial atom flush])
-  (:require [reagent.impl.template :as tmpl]
-            [reagent.impl.component :as comp]
-            [reagent.impl.util :as util]
-            [reagent.impl.batching :as batch]
-            [reagent.impl.protocols :as p]
-            [reagent.ratom :as ratom]
-            [reagent.debug :as deb :refer-macros [assert-some assert-component
+  (:require [reagent.debug :as deb :refer-macros [assert-some assert-component
                                                   assert-js-object assert-new-state
-                                                  assert-callable]]))
-
-(def react (.-react goog/global))
+                                                  assert-callable]]
+            [reagent.impl.batching :as batch]
+            [reagent.impl.component :as comp]
+            [reagent.impl.protocols :as p]
+            [reagent.impl.template :as tmpl]
+            [reagent.impl.util :as util]
+            [reagent.ratom :as ratom]
+            [reagent.react :refer [react]]))
 
 (def is-client util/is-client)
 

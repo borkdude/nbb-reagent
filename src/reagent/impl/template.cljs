@@ -1,15 +1,14 @@
 (ns reagent.impl.template
   (:require [clojure.string :as string]
-            [reagent.impl.util :as util :refer [named?]]
-            [reagent.impl.component :as comp]
+            [goog.object :as gobj]
+            [reagent.debug :refer-macros [dev? warn]]
             [reagent.impl.batching :as batch]
+            [reagent.impl.component :as comp]
             [reagent.impl.input :as input]
             [reagent.impl.protocols :as p]
+            [reagent.impl.util :as util :refer [named?]]
             [reagent.ratom :as ratom]
-            [reagent.debug :refer-macros [dev? warn]]
-            [goog.object :as gobj]))
-
-(def react (.-react goog/global))
+            [reagent.react :refer [react]]))
 
 ;; From Weavejester's Hiccup, via pump:
 (def ^{:doc "Regular expression that parses a CSS-style id and class
