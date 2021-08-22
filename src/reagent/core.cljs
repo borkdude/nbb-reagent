@@ -11,8 +11,7 @@
                                                   assert-js-object assert-new-state
                                                   assert-callable]]))
 
-(def js-require (.-require goog/global))
-(def react (js/require "react"))
+(def react (.-react goog/global))
 
 (def is-client util/is-client)
 

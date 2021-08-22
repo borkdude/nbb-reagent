@@ -9,8 +9,7 @@
             [reagent.debug :refer-macros [dev? warn]]
             [goog.object :as gobj]))
 
-(def js-require (.-require goog/global))
-(def react (js/require "react"))
+(def react (.-react goog/global))
 
 ;; From Weavejester's Hiccup, via pump:
 (def ^{:doc "Regular expression that parses a CSS-style id and class

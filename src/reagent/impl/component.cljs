@@ -6,11 +6,8 @@
             [reagent.ratom :as ratom]
             [reagent.debug :refer-macros [dev? warn error warn-unless assert-callable]]))
 
-(def js-require (.-require goog/global))
-(def react (js/require "react"))
-
+(def react (.-react goog/global))
 (declare ^:dynamic *current-component*)
-
 
 ;;; Argv access
 
