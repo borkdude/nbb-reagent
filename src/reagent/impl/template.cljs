@@ -1,6 +1,5 @@
 (ns reagent.impl.template
-  (:require [react :as react]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [reagent.impl.util :as util :refer [named?]]
             [reagent.impl.component :as comp]
             [reagent.impl.batching :as batch]
@@ -9,6 +8,9 @@
             [reagent.ratom :as ratom]
             [reagent.debug :refer-macros [dev? warn]]
             [goog.object :as gobj]))
+
+(def js-require (.-require goog/global))
+(def react (js/require "react"))
 
 ;; From Weavejester's Hiccup, via pump:
 (def ^{:doc "Regular expression that parses a CSS-style id and class
@@ -129,12 +131,12 @@
 (defn make-element [this argv component jsprops first-child]
   (case (- (count argv) first-child)
     ;; Optimize cases of zero or one child
-    0 (react/createElement component jsprops)
+    0 (.createElement react component jsprops)
 
-    1 (react/createElement component jsprops
+    1 (.createElement react component jsprops
                            (p/as-element this (nth argv first-child nil)))
 
-    (.apply react/createElement nil
+    (.apply (.-createElement react) nil
             (reduce-kv (fn [a k v]
                          (when (>= k first-child)
                           (.push a (p/as-element this v)))
@@ -161,7 +163,7 @@
     (set! (.-argv jsprops) v)
     (when-some [key (util/react-key-from-vec v)]
       (set! (.-key jsprops) key))
-    (react/createElement c jsprops)))
+    (.createElement react c jsprops)))
 
 (defn function-element [tag v first-arg compiler]
   (let [jsprops #js {}]
@@ -170,7 +172,7 @@
     ; (set! (.-opts jsprops) opts)
     (when-some [key (util/react-key-from-vec v)]
       (set! (.-key jsprops) key))
-    (react/createElement (comp/functional-render-fn compiler tag) jsprops)))
+    (.createElement react (comp/functional-render-fn compiler tag) jsprops)))
 
 (defn maybe-function-element
   "If given tag is a Class, use it as a class,
@@ -188,7 +190,7 @@
         first-child (+ 1 (if hasprops 1 0))]
     (when-some [key (util/react-key-from-vec argv)]
       (set! (.-key jsprops) key))
-    (p/make-element compiler argv react/Fragment jsprops first-child)))
+    (p/make-element compiler argv (.-Fragment react) jsprops first-child)))
 
 (def tag-name-cache #js {})
 
