@@ -1,16 +1,16 @@
 (ns reagent.core
   (:require-macros [reagent.core])
   (:refer-clojure :exclude [partial atom flush])
-  (:require [react :as react]
-            [reagent.impl.template :as tmpl]
-            [reagent.impl.component :as comp]
-            [reagent.impl.util :as util]
-            [reagent.impl.batching :as batch]
-            [reagent.impl.protocols :as p]
-            [reagent.ratom :as ratom]
-            [reagent.debug :as deb :refer-macros [assert-some assert-component
+  (:require [reagent.debug :as deb :refer-macros [assert-some assert-component
                                                   assert-js-object assert-new-state
-                                                  assert-callable]]))
+                                                  assert-callable]]
+            [reagent.impl.batching :as batch]
+            [reagent.impl.component :as comp]
+            [reagent.impl.protocols :as p]
+            [reagent.impl.template :as tmpl]
+            [reagent.impl.util :as util]
+            [reagent.ratom :as ratom]
+            [reagent.react :refer [react]]))
 
 (def is-client util/is-client)
 
@@ -35,13 +35,13 @@
    (create-element type nil))
   ([type props]
    (assert-js-object props)
-   (react/createElement type props))
+   (.createElement react type props))
   ([type props child]
    (assert-js-object props)
-   (react/createElement type props child))
+   (.createElement react type props child))
   ([type props child & children]
    (assert-js-object props)
-   (apply react/createElement type props child children)))
+   (apply (.-createElement react) type props child children)))
 
 (defn as-element
   "Turns a vector of Hiccup syntax into a React element. Returns form

@@ -1,14 +1,13 @@
 (ns reagent.impl.component
   (:require [goog.object :as gobj]
-            [react :as react]
-            [reagent.impl.util :as util]
+            [reagent.debug :refer-macros [dev? warn error warn-unless assert-callable]]
             [reagent.impl.batching :as batch]
             [reagent.impl.protocols :as p]
+            [reagent.impl.util :as util]
             [reagent.ratom :as ratom]
-            [reagent.debug :refer-macros [dev? warn error warn-unless assert-callable]]))
+            [reagent.react :refer [react]]))
 
 (declare ^:dynamic *current-component*)
-
 
 ;;; Argv access
 
@@ -40,9 +39,10 @@
   (let [p (.-props c)]
     (if-some [v (.-argv p)]
       (extract-children v)
-      (->> (.-children p)
-           (react/Children.toArray)
-           (into [])))))
+      (let [to-array (.. react -Children -toArray)]
+        (->> (.-children p)
+             to-array
+             (into []))))))
 
 (defn ^boolean reagent-class? [c]
   (and (fn? c)
@@ -301,7 +301,7 @@
         construct (:constructor body)
         cmp (fn [props context updater]
               (this-as ^clj this
-                (.call react/Component this props context updater)
+                (.call (.-Component react) this props context updater)
                 (when construct
                   (construct this props))
                 (when get-initial-state
@@ -309,7 +309,7 @@
                 (set! (.-cljsMountOrder this) (batch/next-mount-count))
                 this))]
 
-    (gobj/extend (.-prototype cmp) (.-prototype react/Component) methods)
+    (gobj/extend (.-prototype cmp) (.. react -Component -prototype) methods)
 
     ;; These names SHOULD be mangled by Closure so we can't use goog/extend
 
@@ -322,7 +322,7 @@
     (when (:cljsLegacyRender body)
       (set! (.-cljsLegacyRender ^clj (.-prototype cmp)) (:cljsLegacyRender body)))
 
-    (gobj/extend cmp react/Component static-methods)
+    (gobj/extend cmp (.-Component react) static-methods)
 
     (when display-name
       (set! (.-displayName cmp) display-name)
@@ -400,13 +400,13 @@
           tag (.-reagentRender jsprops)
 
           ;; Use counter to trigger render manually.
-          [_ update-count] (react/useState 0)
+          [_ update-count] (.useState react 0)
 
           ;; This object mimics React Class attributes and methods.
           ;; To support form-2 components, even the render fn needs to
           ;; be stored as it is created during the first render,
           ;; and subsequent renders need to retrieve the created fn.
-          state-ref (react/useRef)
+          state-ref (.useRef react)
 
           _ (when-not (.-current state-ref)
               (let [obj #js {}]
@@ -426,7 +426,7 @@
           ;; FIXME: Access cljsRatom using interop forms
           rat ^ratom/Reaction (gobj/get reagent-state "cljsRatom")]
 
-      (react/useEffect
+      (.useEffect react
         (fn mount []
           (fn unmount []
             (some-> (gobj/get reagent-state "cljsRatom") ratom/dispose!)))
@@ -471,6 +471,6 @@
   (or (cached-react-class compiler tag)
       (let [f (fn [jsprops] (functional-render compiler jsprops))
             _ (set! (.-displayName f) (util/fun-name tag))
-            f (react/memo f functional-render-memo-fn)]
+            f (.memo react f functional-render-memo-fn)]
         (cache-react-class compiler tag f)
         f)))
