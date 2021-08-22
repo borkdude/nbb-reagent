@@ -18,3 +18,4 @@ junit
 coverage/
 
 .clj-kondo/.cache
+.cpcache
