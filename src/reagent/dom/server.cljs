@@ -12,7 +12,7 @@
   ([component compiler]
    (ratom/flush!)
    (binding [util/*non-reactive* true]
-     (.renderToString react-dom-server (p/as-element compiler component)))))
+     (.renderToString ^js react-dom-server (p/as-element compiler component)))))
 
 (defn render-to-static-markup
   "Turns a component into an HTML string, without data-react-id attributes, etc."
@@ -21,4 +21,4 @@
   ([component compiler]
    (ratom/flush!)
    (binding [util/*non-reactive* true]
-     (.renderToStaticMarkup react-dom-server (p/as-element compiler component)))))
+     (.renderToStaticMarkup ^js react-dom-server (p/as-element compiler component)))))
