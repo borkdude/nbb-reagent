@@ -1,9 +1,9 @@
 (ns reagent.dom.server
-  (:require ["react-dom/server" :as dom-server]
-            [reagent.impl.util :as util]
+  (:require [reagent.impl.protocols :as p]
             [reagent.impl.template :as tmpl]
-            [reagent.impl.protocols :as p]
-            [reagent.ratom :as ratom]))
+            [reagent.impl.util :as util]
+            [reagent.ratom :as ratom]
+            [reagent.react.dom.server :refer [react-dom-server]]))
 
 (defn render-to-string
   "Turns a component into an HTML string."
@@ -12,7 +12,7 @@
   ([component compiler]
    (ratom/flush!)
    (binding [util/*non-reactive* true]
-     (dom-server/renderToString (p/as-element compiler component)))))
+     (.renderToString react-dom-server (p/as-element compiler component)))))
 
 (defn render-to-static-markup
   "Turns a component into an HTML string, without data-react-id attributes, etc."
@@ -21,4 +21,4 @@
   ([component compiler]
    (ratom/flush!)
    (binding [util/*non-reactive* true]
-     (dom-server/renderToStaticMarkup (p/as-element compiler component)))))
+     (.renderToStaticMarkup react-dom-server (p/as-element compiler component)))))

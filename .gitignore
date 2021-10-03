@@ -19,3 +19,4 @@ coverage/
 
 .clj-kondo/.cache
 .cpcache
+/.lsp/.cache
