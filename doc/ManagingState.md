@@ -117,8 +117,8 @@ Cursors are created with `reagent/cursor`, which takes a ratom and a keypath (li
 ```clojure
 ;; First create a ratom
 (def state (reagent/atom {:foo {:bar "BAR"}
-                                :baz "BAZ"
-                                :quux "QUUX"}))
+                          :baz "BAZ"
+                          :quux "QUUX"}))
 ;; Now create a cursor
 (def bar-cursor (reagent/cursor state [:foo :bar]))
 
@@ -169,7 +169,7 @@ Reactions are what give `r/atom`, `r/cursor`, and `r/wrap` their power.
 
 `make-reaction` takes one argument, `f`, and an optional options map. The options map specifies what happens to `f`:
 
-* `auto-run` (boolean) specifies whether `f` run on change
+* `auto-run` (boolean) specifies whether `f` runs on change
 * `on-set` and `on-dispose` are run when the reaction is set and unset from the DOM
 * `derefed` **TODO unclear**
 

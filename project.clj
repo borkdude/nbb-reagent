@@ -1,4 +1,4 @@
-(defproject reagent "1.1.0"
+(defproject reagent "1.1.1"
   :url "http://github.com/reagent-project/reagent"
   :license {:name "MIT"}
   :description "A simple ClojureScript interface to React"
@@ -8,7 +8,7 @@
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.11"]
             [lein-codox "0.10.7"]
-            [lein-figwheel "0.5.19"]]
+            [lein-figwheel "0.5.20"]]
 
   :source-paths ["src"]
 
@@ -18,7 +18,7 @@
           :doc-paths []}
 
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.10.3"]
-                                  [org.clojure/clojurescript "1.10.866"]
+                                  [org.clojure/clojurescript "1.10.896"]
                                   [figwheel "0.5.20"]
                                   [figwheel-sidecar "0.5.20"]
                                   [doo "0.1.11"]
@@ -32,7 +32,7 @@
 
   :clean-targets ^{:protect false} [:target-path :compile-path "out"]
 
-  :repl-options {:init (do (require '[figwheel-sidecar.repl-api :refer :all]))}
+  :repl-options {:init (require '[figwheel-sidecar.repl-api :refer :all])}
 
   :figwheel {:http-server-root "public" ;; assumes "resources"
              :css-dirs ["site/public/css"]
