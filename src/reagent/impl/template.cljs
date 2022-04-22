@@ -129,12 +129,12 @@
 (defn make-element [this argv component jsprops first-child]
   (case (- (count argv) first-child)
     ;; Optimize cases of zero or one child
-    0 (.createElement react component jsprops)
+    0 (.createElement (react) component jsprops)
 
-    1 (.createElement react component jsprops
+    1 (.createElement (react) component jsprops
                            (p/as-element this (nth argv first-child nil)))
 
-    (.apply (.-createElement react) nil
+    (.apply (.-createElement (react)) nil
             (reduce-kv (fn [a k v]
                          (when (>= k first-child)
                           (.push a (p/as-element this v)))
@@ -161,7 +161,7 @@
     (set! (.-argv jsprops) v)
     (when-some [key (util/react-key-from-vec v)]
       (set! (.-key jsprops) key))
-    (.createElement react c jsprops)))
+    (.createElement (react) c jsprops)))
 
 (defn function-element [tag v first-arg compiler]
   (let [jsprops #js {}]
@@ -170,7 +170,7 @@
     ; (set! (.-opts jsprops) opts)
     (when-some [key (util/react-key-from-vec v)]
       (set! (.-key jsprops) key))
-    (.createElement react (comp/functional-render-fn compiler tag) jsprops)))
+    (.createElement (react) (comp/functional-render-fn compiler tag) jsprops)))
 
 (defn maybe-function-element
   "If given tag is a Class, use it as a class,
@@ -188,7 +188,7 @@
         first-child (+ 1 (if hasprops 1 0))]
     (when-some [key (util/react-key-from-vec argv)]
       (set! (.-key jsprops) key))
-    (p/make-element compiler argv (.-Fragment react) jsprops first-child)))
+    (p/make-element compiler argv (.-Fragment (react)) jsprops first-child)))
 
 (def tag-name-cache #js {})
 

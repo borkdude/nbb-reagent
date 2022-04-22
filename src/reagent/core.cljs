@@ -35,13 +35,13 @@
    (create-element type nil))
   ([type props]
    (assert-js-object props)
-   (.createElement react type props))
+   (.createElement (react) type props))
   ([type props child]
    (assert-js-object props)
-   (.createElement react type props child))
+   (.createElement (react) type props child))
   ([type props child & children]
    (assert-js-object props)
-   (apply (.-createElement react) type props child children)))
+   (apply (.-createElement (react)) type props child children)))
 
 (defn as-element
   "Turns a vector of Hiccup syntax into a React element. Returns form
